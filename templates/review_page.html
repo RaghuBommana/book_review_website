@@ -17,7 +17,11 @@
     <div id="header"></div>
     <div class="contentTitle">{{title}}</div>
     <div class="pageContent">
-    <form action="{{ url_for('success') }}" id="review">
+    <form action="{{ url_for('success') }}" id="review" method="POST">
+        <input type="hidden" id="myvalue" name="book_id" value="" /><script type="text/javascript">
+            var book_id = {{ data.bid }}
+            document.getElementById("myvalue").value = book_id;
+        </script>
         <p>Genuine reviews help the community thank you for your time!</p>
         <textarea rows="4" cols="50" name="review" form="review">Enter your review here...</textarea>
         <label for="rating">Rating: </label>

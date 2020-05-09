@@ -17,15 +17,32 @@ Readers-Hub-Book
     <div id="header"></div>
     <div class="contentTitle">Written by: {{author}}</div>
     <div class="pageContent">
-        <p>API details</p>
-        <p>Number of reviews: 0</p>
-        <p>Loop through to display reviews</p>
+        <p>Rating on GoodReads: {{GRrating}}</p> <!-- This line is added by surya -->
+        <p>Number of reviews: {{ count }}</p>
+        {% if mybool %}
         <p><form action="/review" method="POST"><input type="hidden" id="myvalue" name="book_id" value="" /><script type="text/javascript">
             var book_id = {{ data.bid }}
             document.getElementById("myvalue").value = book_id;
         </script>Read This Book? Please give your review!<input type="submit" value="Review">
         </form>
+        {% else %}
+        <p>You have already submitted a review for this book! Thank you for your contribution!</p>
+        {% endif %}
+        <p>API details: <a href="{{url_for('api_out',isbn=isbn)}}">Click here for API</a></p> <!-- This line is edited by surya -->
+        {% if count  %}
         </p>
+        <p>............................................................................User Reviews............................................................................</p>
+        <p>............................................................................................................................................................................</p>
+        {% for review in reviews %}
+            <p>Review: {{ review[0] }}</p>
+            <p>Rating: {{ review[1] }}</p>
+            <p>By: {{ review[2] }}</p>
+            <p>............................................................................................................................................................................</p>        
+        {% endfor %}
+        <p>...........................................................................End of Reviews...........................................................................</p>
+        {% else %}
+        <p>...................................No Reviews so far! Please add a review if you have read this book!..................................</p>
+        {% endif %}    
     </div>
 </div>
 {% endblock %}

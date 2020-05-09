@@ -1,0 +1,32 @@
+{% extends "layout2.html" %}
+
+{% block title %}
+    Readers-Hub-Search
+{% endblock %}
+
+{% block body %}
+<div id="title">API SECTION</div>
+<div id="linkGroup">
+    <div class="link"><a href="{{ url_for('main') }}">Home</a></div>
+    <div class="link"><a href="{{ url_for('user') }}">User Info</a></div>
+    <div class="link"><a href="{{ url_for('search') }}">Search</a></div>
+    <div class="link"><a href="{{ url_for('api') }}">API</a></div>
+</div>
+
+<div id="blueBox"> 
+    <div id="header"></div>
+    <div class="contentTitle">How to use our API</div>
+    <div class="pageContent">
+        <p>For API queries, we have programmed our website to return a JSON object.</p>
+        <p>A sample JSON Object will be as follows: </p>
+        <p>"author":"author_name"</p>
+        <p>"average_score":"average rating from users"</p>
+        <p>"isbn":"isbn of book"</p>
+        <p>"review_count":"number of reviews"</p>
+        <p>"title":"title of book"</p>
+        <p>"year":"year of publication"</p>
+        <p>Feel free to use our API feature for any purpose!</p>
+        <p>Just find the book you are looking via SEARCH and click on the API details in the content area Thank You! </p>        
+    </div>
+</div>
+{% endblock %}
