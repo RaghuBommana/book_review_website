@@ -114,22 +114,26 @@ def book(book_id):
     try:
         res=res.json()
         GRrating=res['books'][0]['average_rating']
-        reviews = db.execute("SELECT review,rating,username,review_id FROM reviews WHERE book_id = :book_id",{"book_id":bid}).fetchall()
+        reviews = db.execute("SELECT review,rating,username FROM reviews WHERE book_id = :book_id",{"book_id":bid}).fetchall()
+        username = db.execute("SELECT username FROM users WHERE id = :id",{"id":uid}).fetchone()
+        username = username[0]
         count = len(reviews)
         GRrating = str(GRrating)+"/5!"
         mybool = True
         for review in reviews:
-            if review[3] == uid:
+            if review[2] == username:
                 mybool = False
         
         return render_template('book_id.html',title = row[2],author = row[3],data = data,reviews = reviews, count = count, GRrating = GRrating, isbn=isbn, mybool = mybool)
     except:
-        reviews = db.execute("SELECT review,rating,username,review_id FROM reviews WHERE book_id = :book_id",{"book_id":bid}).fetchall()
+        reviews = db.execute("SELECT review,rating,username FROM reviews WHERE book_id = :book_id",{"book_id":bid}).fetchall()
+        username = db.execute("SELECT username FROM users WHERE id = :id",{"id":uid}).fetchone()
+        username = username[0]
         count = len(reviews)
         GRrating = "Sorry could not fetch Goodreads rating..."
         mybool = True
         for review in reviews:
-            if review[3] == uid:
+            if review[2] == username:
                 mybool = False
         return render_template('book_id.html',title = row[2],author = row[3],data = data,reviews = reviews, count = count, GRrating = GRrating, isbn = isbn, mybool = mybool)
 
