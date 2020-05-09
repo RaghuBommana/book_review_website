@@ -89,7 +89,7 @@ def user():
 def search():
     if request.method == "POST":
         string = request.form.get("string")
-        #EXECUTE SEARCH FUNCTION PASS RESULTS TO SEARCH.html
+        #EXECUTE SEARCH FUNCTION PASS RESULTS TO SEARCH.html    
         string = string.lower()
         string = '%' + string + '%'
         results = db.execute("SELECT id,title FROM books WHERE LOWER (books.title) LIKE :string", {"string":string}).fetchall()
@@ -109,6 +109,7 @@ def book(book_id):
     db.commit()
     data = {'bid':bid}
     isbn=row[1]
+    uid = session["id"]
     res=requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": KEY, "isbns": isbn})
     try:
         res=res.json()
@@ -118,15 +119,19 @@ def book(book_id):
         GRrating = str(GRrating)+"/5!"
         mybool = True
         for review in reviews:
-            if review[3] == session["id"]:
+            if review[3] == uid:
                 mybool = False
         
         return render_template('book_id.html',title = row[2],author = row[3],data = data,reviews = reviews, count = count, GRrating = GRrating, isbn=isbn, mybool = mybool)
     except:
-        reviews = db.execute("SELECT review,rating,username FROM reviews WHERE book_id = :book_id",{"book_id":bid}).fetchall()
+        reviews = db.execute("SELECT review,rating,username,id FROM reviews WHERE book_id = :book_id",{"book_id":bid}).fetchall()
         count = len(reviews)
         GRrating = "Sorry could not fetch Goodreads rating..."
-        return render_template('book_id.html',title = row[2],author = row[3],data = data,reviews = reviews, count = count, GRrating = GRrating)
+        mybool = True
+        for review in reviews:
+            if review[3] == uid:
+                mybool = False
+        return render_template('book_id.html',title = row[2],author = row[3],data = data,reviews = reviews, count = count, GRrating = GRrating, isbn = isbn, mybool = mybool)
 
     
 
