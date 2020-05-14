@@ -19,11 +19,11 @@ Session(app)
 
 # Set up database
 #For Deployment
-engine = create_engine(os.getenv("DATABASE_URL"))
+#engine = create_engine(os.getenv("DATABASE_URL"))
 #For Local
-#engine = create_engine("postgres://rljdkhwyibrclr:83b8058cc1429ab991e99a6bdf0f137575a6a87654989daa21d4cce4891134fc@ec2-50-17-90-177.compute-1.amazonaws.com:5432/d2adq2pnnb6dg2")
+engine = create_engine("postgres://rljdkhwyibrclr:83b8058cc1429ab991e99a6bdf0f137575a6a87654989daa21d4cce4891134fc@ec2-50-17-90-177.compute-1.amazonaws.com:5432/d2adq2pnnb6dg2")
 db = scoped_session(sessionmaker(bind=engine))
-KEY="6iGmZfPMsrgbm0i8iqfcw"
+KEY="P5DWeN6ClUPjRg26HDqA"
 
 
 @app.route("/",methods =["POST","GET"])
@@ -92,8 +92,16 @@ def search():
         #EXECUTE SEARCH FUNCTION PASS RESULTS TO SEARCH.html    
         string = string.lower()
         string = '%' + string + '%'
-        results = db.execute("SELECT id,title FROM books WHERE LOWER (books.title) LIKE :string", {"string":string}).fetchall()
-        db.commit()
+        search_by = request.form.get("search_by")
+        if search_by == "Title":
+            results = db.execute("SELECT id,title,author FROM books WHERE LOWER (books.title) LIKE :string", {"string":string}).fetchall()
+            db.commit()
+        elif search_by == "Author":
+            results = db.execute("SELECT id,title,author FROM books WHERE LOWER (books.author) LIKE :string", {"string":string}).fetchall()
+            db.commit() 
+        else:
+            results = db.execute("SELECT id,title,author,isbn FROM books WHERE LOWER (books.isbn) LIKE :string", {"string":string}).fetchall()
+            db.commit()
         if len(results)<1:
             return render_template('search.html', msg = "Sorry, we could not find what you were looking for.")
         else:

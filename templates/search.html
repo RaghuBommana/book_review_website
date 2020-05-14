@@ -21,11 +21,17 @@
         <form class="example" action="{{ url_for('search') }}" style="margin:auto;max-width:300px" method="POST">
             <input type="text" placeholder="Search..." name="string">
             <button type="submit"><i class="fa fa-search"></i></button>
-          </form>
+            <input type="radio" id="Title" name="search_by" value="Title" checked>
+            <label for="Title">Title</label><br>
+            <input type="radio" id="Author" name="search_by" value="Author">
+            <label for="Author">Author</label><br>
+            <input type="radio" id="ISBN" name="search_by" value="ISBN">
+            <label for="ISBN">ISBN</label>
+      </form>
         
         <p>{{ msg }}</p>
         {% for result in results %}
-                <p><a href="{{ url_for('book', book_id=result[0]) }}">{{result[1]}}</a></p>
+                <p><a href="{{ url_for('book', book_id=result[0]) }}">{{result[1]}} || Written By: {{result[2]}}</a></p>
         {% endfor %}
     </div>
 </div>
